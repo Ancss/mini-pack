@@ -29,7 +29,6 @@ function createAsset(fullPath) {
 
 function createGraph(entry) {
   const cache = new Map<string, boolean>()
-  const manifest = []
   const mainAsset = createAsset(entry)
   const queue = []
   updateMap(mainAsset, entry)
@@ -48,11 +47,10 @@ function createGraph(entry) {
     if (parentAsset) {
       parentAsset.mappings[asset.fullPath] = asset.id
     }
-    manifest[asset.id] = asset
     queue.push(asset)
   }
   return {
-    manifest
+    queue
   }
 }
 
@@ -91,6 +89,6 @@ function getPath(parentPath, relativePath) {
   return resolve(dirname(parentPath), relativePath)
 }
 
-const { manifest } = createGraph('./example/entry.js')
-const result = bundle(manifest)
+const { queue } = createGraph('./example/entry.js')
+const result = bundle(queue)
 output(result)
